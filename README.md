@@ -59,6 +59,12 @@ install [air](https://github.com/cosmtrek/air)
 air serve
 ```
 
+for windows
+
+```
+make air-win
+```
+
 ### Generate Mock
 
 install [mockery](https://github.com/vektra/mockery)
