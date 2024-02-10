@@ -1,8 +1,6 @@
 package migration
 
 import (
-	"context"
-
 	"github.com/urfave/cli/v2"
 )
 
@@ -17,7 +15,7 @@ func Up() *cli.Command {
 				return err
 			}
 
-			if err := migrations.Up(context.Background()); err != nil {
+			if err := migrations.Up(c.Context); err != nil {
 				return err
 			}
 
