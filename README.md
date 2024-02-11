@@ -1,5 +1,9 @@
 ## Getting Started <a name = "getting_started"></a>
 
+### Database Schema
+
+![Database Schema](https://raw.githubusercontent.com/arfan21/synapsis_id/main/docs/schema_db.png?token=GHSAT0AAAAAACG7HQFAIFF4KRY6JZEL3XBOZOJAHOA)
+
 ### Prerequisites
 
 -   Setup env variable
