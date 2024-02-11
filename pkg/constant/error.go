@@ -1,5 +1,15 @@
 package constant
 
+import "errors"
+
+const (
+	ErrSQLUniqueViolation = "23505"
+)
+
+var (
+	ErrEmailAlreadyRegistered = errors.New("email already registered")
+)
+
 type ErrNotFound struct {
 	Message string
 }

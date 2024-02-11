@@ -36,3 +36,8 @@ type PaginationResponse struct {
 	Limit     int `json:"limit" example:"10"`
 	Data      any `json:"data,omitempty" `
 }
+
+type ErrValidationResponse struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
+}

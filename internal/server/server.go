@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/arfan21/synapsis_id/config"
+	_ "github.com/arfan21/synapsis_id/docs"
 	"github.com/arfan21/synapsis_id/internal/middleware"
 	"github.com/arfan21/synapsis_id/pkg/exception"
 	"github.com/arfan21/synapsis_id/pkg/logger"

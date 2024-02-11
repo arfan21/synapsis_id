@@ -77,6 +77,11 @@ func FiberErrorHandler(ctx *fiber.Ctx, err error) error {
 		}
 	}
 
+	if errors.Is(err, constant.ErrEmailAlreadyRegistered) {
+		defaultRes.Code = fiber.StatusConflict
+		defaultRes.Message = constant.ErrEmailAlreadyRegistered.Error()
+	}
+
 	if defaultRes.Code >= 500 {
 		defaultRes.Message = http.StatusText(defaultRes.Code)
 	}
