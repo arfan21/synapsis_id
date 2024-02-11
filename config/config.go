@@ -122,7 +122,7 @@ func GetViper(filenames ...string) *viper.Viper {
 
 func initDefaultValue(v *viper.Viper) {
 	v.SetDefault("HTTP_PORT", "8080")
-	v.SetDefault("ENV", "development")
+	v.SetDefault("ENV", "dev")
 	v.SetDefault("SERVICE_NAME", "synapsis_id")
 	v.SetDefault("SERVICE_READ_TIMEOUT", 30)
 	v.SetDefault("SERVICE_WRITE_TIMEOUT", 30)

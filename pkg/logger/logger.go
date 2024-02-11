@@ -5,6 +5,7 @@ import (
 	"os"
 	"sync"
 
+	"github.com/arfan21/synapsis_id/config"
 	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/rs/zerolog"
@@ -18,8 +19,7 @@ func Log(ctx context.Context) *zerolog.Logger {
 		multi := zerolog.MultiLevelWriter(os.Stdout)
 		LoggerInstance = zerolog.New(multi).With().Timestamp().Logger()
 
-		env := os.Getenv("ENV")
-		if env == "dev" {
+		if config.GetConfig().Env == "dev" {
 			LoggerInstance = LoggerInstance.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 		}
 
