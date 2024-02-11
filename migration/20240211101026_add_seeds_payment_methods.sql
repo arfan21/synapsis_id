@@ -3,16 +3,8 @@
 INSERT INTO
     payment_methods (name)
 VALUES
-    ('OVO');
-
-INSERT INTO
-    payment_methods (name)
-VALUES
-    ('Gopay');
-
-INSERT INTO
-    payment_methods (name)
-VALUES
+    ('OVO'),
+    ('Gopay'),
     ('Dana');
 
 -- +goose StatementEnd
@@ -20,14 +12,6 @@ VALUES
 -- +goose StatementBegin
 DELETE FROM payment_methods
 WHERE
-    name = 'OVO';
-
-DELETE FROM payment_methods
-WHERE
-    name = 'Gopay';
-
-DELETE FROM payment_methods
-WHERE
-    name = 'Dana';
+    name IN ('OVO', 'Gopay', 'Dana');
 
 -- +goose StatementEnd
