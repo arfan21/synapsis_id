@@ -4,6 +4,7 @@ import (
 	"github.com/arfan21/synapsis_id/config"
 	"github.com/arfan21/synapsis_id/internal/server"
 	dbpostgres "github.com/arfan21/synapsis_id/pkg/db/postgres"
+	dbredis "github.com/arfan21/synapsis_id/pkg/db/redis"
 	"github.com/urfave/cli/v2"
 )
 
@@ -27,8 +28,14 @@ func Serve() *cli.Command {
 				return err
 			}
 
+			dbredis, err := dbredis.New()
+			if err != nil {
+				return err
+			}
+
 			server := server.New(
 				db,
+				dbredis,
 			)
 
 			return server.Run()

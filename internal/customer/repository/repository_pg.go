@@ -55,3 +55,29 @@ func (r Repository) Create(ctx context.Context, data entity.Customer) (err error
 
 	return
 }
+
+func (r Repository) GetByEmail(ctx context.Context, email string) (data entity.Customer, err error) {
+	query := `
+		SELECT id, fullname, email, password
+		FROM customers
+		WHERE email = $1
+	`
+
+	err = r.db.QueryRow(ctx, query, email).Scan(
+		&data.ID,
+		&data.Fullname,
+		&data.Email,
+		&data.Password,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			err = constant.ErrEmailOrPasswordInvalid
+		}
+
+		err = fmt.Errorf("customer.repository.GetByEmail: failed to get customer by email: %w", err)
+
+		return
+	}
+
+	return
+}

@@ -13,14 +13,15 @@ func (s *Server) Routes() {
 	api.Get("/health-check", func(c *fiber.Ctx) error { return c.SendStatus(fiber.StatusOK) })
 
 	customerRepo := customerrepo.New(s.db)
-	customerSvc := customersvc.New(customerRepo)
+	customerRepoRedis := customerrepo.NewRedis(s.redisClient)
+	customerSvc := customersvc.New(customerRepo, customerRepoRedis)
 	customerCtrl := customerctrl.New(customerSvc)
 
 	s.RoutesCustomer(api, customerCtrl)
-
 }
 
 func (s Server) RoutesCustomer(route fiber.Router, ctrl *customerctrl.ControllerHTTP) {
 	v1 := route.Group("/v1")
 	v1.Post("/customer/register", ctrl.Register)
+	v1.Post("/customer/login", ctrl.Login)
 }

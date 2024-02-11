@@ -16,6 +16,7 @@ type config struct {
 	Database database `mapstructure:",squash"`
 	Redis    redis    `mapstructure:",squash"`
 	Service  service  `mapstructure:",squash"`
+	JWT      jwt      `mapstructure:",squash"`
 }
 
 type service struct {
@@ -38,8 +39,17 @@ func (d database) GetDSN() string {
 }
 
 type redis struct {
-	URL  string `mapstructure:"REDIS_HOST"`
-	Port string `mapstructure:"REDIS_PORT"`
+	URL      string `mapstructure:"REDIS_HOST"`
+	Port     string `mapstructure:"REDIS_PORT"`
+	Username string `mapstructure:"REDIS_USERNAME"`
+	Password string `mapstructure:"REDIS_PASSWORD"`
+}
+
+type jwt struct {
+	AccessTokenSecret    string `mapstructure:"JWT_ACCESS_TOKEN_SECRET"`
+	AccessTokenExpireIn  int    `mapstructure:"JWT_ACCESS_TOKEN_EXPIRE_IN"`
+	RefreshTokenSecret   string `mapstructure:"JWT_REFRESH_TOKEN_SECRET"`
+	RefreshTokenExpireIn int    `mapstructure:"JWT_REFRESH_TOKEN_EXPIRE_IN"`
 }
 
 var configInstance *config

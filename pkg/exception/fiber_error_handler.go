@@ -82,6 +82,11 @@ func FiberErrorHandler(ctx *fiber.Ctx, err error) error {
 		defaultRes.Message = constant.ErrEmailAlreadyRegistered.Error()
 	}
 
+	if errors.Is(err, constant.ErrEmailOrPasswordInvalid) {
+		defaultRes.Code = fiber.StatusUnauthorized
+		defaultRes.Message = constant.ErrEmailOrPasswordInvalid.Error()
+	}
+
 	if defaultRes.Code >= 500 {
 		defaultRes.Message = http.StatusText(defaultRes.Code)
 	}

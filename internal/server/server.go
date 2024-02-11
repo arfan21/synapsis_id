@@ -20,6 +20,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/swagger"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
 )
 
 const (
@@ -27,12 +28,14 @@ const (
 )
 
 type Server struct {
-	app *fiber.App
-	db  *pgxpool.Pool
+	app         *fiber.App
+	db          *pgxpool.Pool
+	redisClient *redis.Client
 }
 
 func New(
 	db *pgxpool.Pool,
+	redisClient *redis.Client,
 ) *Server {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: exception.FiberErrorHandler,
@@ -55,8 +58,9 @@ func New(
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	return &Server{
-		app: app,
-		db:  db,
+		app:         app,
+		db:          db,
+		redisClient: redisClient,
 	}
 }
 
