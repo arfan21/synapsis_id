@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/arfan21/synapsis_id/pkg/constant"
+	"github.com/arfan21/synapsis_id/pkg/logger"
 	"github.com/arfan21/synapsis_id/pkg/pkgutil"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,6 +15,9 @@ import (
 )
 
 func FiberErrorHandler(ctx *fiber.Ctx, err error) error {
+	defer func() {
+		logger.Log(ctx.UserContext()).Error().Msg(err.Error())
+	}()
 
 	defaultRes := pkgutil.HTTPResponse{
 		Code:    fiber.StatusInternalServerError,
