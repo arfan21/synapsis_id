@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/arfan21/synapsis_id/pkg/constant"
 	"github.com/arfan21/synapsis_id/pkg/logger"
@@ -90,6 +91,24 @@ func FiberErrorHandler(ctx *fiber.Ctx, err error) error {
 	if errors.Is(err, constant.ErrUnauthorizedAccess) {
 		defaultRes.Code = fiber.StatusUnauthorized
 		defaultRes.Message = constant.ErrUnauthorizedAccess.Error()
+	}
+
+	if errors.Is(err, constant.ErrCategoryNotFound) {
+		defaultRes.Code = fiber.StatusNotFound
+		defaultRes.Message = constant.ErrCategoryNotFound.Error()
+	}
+
+	// check decimal error decode
+	if strings.Contains(err.Error(), "error decoding string") &&
+		strings.Contains(err.Error(), "to decimal") {
+		defaultRes.Code = fiber.StatusBadRequest
+		defaultRes.Message = constant.ErrStringNotDecimal.Error()
+	}
+
+	// handle error parse uuid
+	if strings.Contains(strings.ToLower(err.Error()), strings.ToLower("invalid UUID")) {
+		defaultRes.Code = fiber.StatusBadRequest
+		defaultRes.Message = constant.ErrInvalidUUID.Error()
 	}
 
 	if defaultRes.Code >= 500 {

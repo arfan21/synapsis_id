@@ -14,7 +14,9 @@ require (
 	github.com/jackc/pgx/v5 v5.5.2
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pressly/goose/v3 v3.18.0
+	github.com/redis/go-redis/v9 v9.4.0
 	github.com/rs/zerolog v1.32.0
+	github.com/shopspring/decimal v1.3.1
 	github.com/spf13/viper v1.18.2
 	github.com/swaggo/swag v1.16.3
 	github.com/urfave/cli/v2 v2.27.1
@@ -49,7 +51,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mfridman/interpolate v0.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
-	github.com/redis/go-redis/v9 v9.4.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect

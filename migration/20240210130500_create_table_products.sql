@@ -16,6 +16,7 @@ CREATE TABLE
         category_id UUID,
         name VARCHAR(255) NOT NULL,
         stok INT NOT NULL,
+        price decimal,
         created_at TIMESTAMP DEFAULT now (),
         updated_at TIMESTAMP DEFAULT now (),
         CONSTRAINT fk_products_customers FOREIGN KEY (customer_id) REFERENCES customers (id),

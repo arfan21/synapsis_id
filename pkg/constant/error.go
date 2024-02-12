@@ -10,6 +10,9 @@ var (
 	ErrEmailAlreadyRegistered = errors.New("email already registered")
 	ErrEmailOrPasswordInvalid = errors.New("email or password invalid")
 	ErrUnauthorizedAccess     = errors.New("unauthorized access")
+	ErrCategoryNotFound       = errors.New("category not found")
+	ErrStringNotDecimal       = errors.New("string value is not decimal")
+	ErrInvalidUUID            = errors.New("invalid uuid length or format")
 )
 
 type ErrNotFound struct {

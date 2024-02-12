@@ -47,6 +47,32 @@ definitions:
     - fullname
     - password
     type: object
+  github_com_arfan21_synapsis_id_internal_model.GetCategoryResponse:
+    properties:
+      id:
+        type: string
+      string:
+        type: string
+    type: object
+  github_com_arfan21_synapsis_id_internal_model.ProductCreateRequest:
+    properties:
+      category_id:
+        type: string
+      customer_id:
+        type: string
+      name:
+        type: string
+      price:
+        type: string
+      stok:
+        type: integer
+    required:
+    - category_id
+    - customer_id
+    - name
+    - price
+    - stok
+    type: object
   github_com_arfan21_synapsis_id_pkg_pkgutil.ErrValidationResponse:
     properties:
       field:
@@ -204,4 +230,67 @@ paths:
       summary: Register Customer
       tags:
       - Customer
+  /api/v1/products:
+    post:
+      consumes:
+      - application/json
+      description: Create Product
+      parameters:
+      - description: Payload Create Product Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arfan21_synapsis_id_internal_model.ProductCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+        "400":
+          description: Error validation field
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+            - properties:
+                errors:
+                  items:
+                    $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.ErrValidationResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+      summary: Create Product
+      tags:
+      - Product
+  /api/v1/products/categories:
+    get:
+      consumes:
+      - application/json
+      description: Get Product Categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/github_com_arfan21_synapsis_id_internal_model.GetCategoryResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+      summary: Get Product Categories
+      tags:
+      - Product
 swagger: "2.0"
