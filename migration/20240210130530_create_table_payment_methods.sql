@@ -1,11 +1,5 @@
 -- +goose Up
 -- +goose StatementBegin
--- payment_methods {
---   id uuid pk gen_random_uuid()
---   name string
---   created_at timestamp
---   updated_at timestamp
--- }
 CREATE TABLE
     IF NOT EXISTS payment_methods (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
