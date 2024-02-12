@@ -109,7 +109,7 @@ info:
   title: Synapsis ID API
   version: "1.0"
 paths:
-  /api/v1/customer/login:
+  /api/v1/customers/login:
     post:
       consumes:
       - application/json
@@ -151,7 +151,7 @@ paths:
       summary: Login Customer
       tags:
       - Customer
-  /api/v1/customer/refresh-token:
+  /api/v1/customers/refresh-token:
     post:
       consumes:
       - application/json
@@ -193,7 +193,7 @@ paths:
       summary: Refresh Token Customer
       tags:
       - Customer
-  /api/v1/customer/register:
+  /api/v1/customers/register:
     post:
       consumes:
       - application/json

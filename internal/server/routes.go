@@ -31,9 +31,10 @@ func (s *Server) Routes() {
 
 func (s Server) RoutesCustomer(route fiber.Router, ctrl *customerctrl.ControllerHTTP) {
 	v1 := route.Group("/v1")
-	v1.Post("/customer/register", ctrl.Register)
-	v1.Post("/customer/login", ctrl.Login)
-	v1.Post("/customer/refresh-token", ctrl.RefreshToken)
+	customersV1 := v1.Group("/customers")
+	customersV1.Post("/register", ctrl.Register)
+	customersV1.Post("/login", ctrl.Login)
+	customersV1.Post("/refresh-token", ctrl.RefreshToken)
 }
 
 func (s Server) RoutesProduct(route fiber.Router, ctrl *productctrl.ControllerHTTP) {

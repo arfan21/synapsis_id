@@ -23,7 +23,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/customer/login": {
+        "/api/v1/customers/login": {
             "post": {
                 "description": "Login Customer",
                 "consumes": [
@@ -96,7 +96,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/customer/refresh-token": {
+        "/api/v1/customers/refresh-token": {
             "post": {
                 "description": "Refresh Token Customer",
                 "consumes": [
@@ -169,7 +169,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/customer/register": {
+        "/api/v1/customers/register": {
             "post": {
                 "description": "Register Customer",
                 "consumes": [

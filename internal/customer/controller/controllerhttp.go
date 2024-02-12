@@ -25,7 +25,7 @@ func New(svc customer.Service) *ControllerHTTP {
 // @Success 201 {object} pkgutil.HTTPResponse
 // @Failure 400 {object} pkgutil.HTTPResponse{errors=[]pkgutil.ErrValidationResponse} "Error validation field"
 // @Failure 500 {object} pkgutil.HTTPResponse
-// @Router /api/v1/customer/register [post]
+// @Router /api/v1/customers/register [post]
 func (ctrl ControllerHTTP) Register(c *fiber.Ctx) error {
 	var req model.CustomerRegisterRequest
 	err := c.BodyParser(&req)
@@ -48,7 +48,7 @@ func (ctrl ControllerHTTP) Register(c *fiber.Ctx) error {
 // @Success 200 {object} pkgutil.HTTPResponse{data=model.CustomerLoginResponse}
 // @Failure 400 {object} pkgutil.HTTPResponse{errors=[]pkgutil.ErrValidationResponse} "Error validation field"
 // @Failure 500 {object} pkgutil.HTTPResponse
-// @Router /api/v1/customer/login [post]
+// @Router /api/v1/customers/login [post]
 func (ctrl ControllerHTTP) Login(c *fiber.Ctx) error {
 	var req model.CustomerLoginRequest
 	err := c.BodyParser(&req)
@@ -72,7 +72,7 @@ func (ctrl ControllerHTTP) Login(c *fiber.Ctx) error {
 // @Success 200 {object} pkgutil.HTTPResponse{data=model.CustomerLoginResponse}
 // @Failure 400 {object} pkgutil.HTTPResponse{errors=[]pkgutil.ErrValidationResponse} "Error validation field"
 // @Failure 500 {object} pkgutil.HTTPResponse
-// @Router /api/v1/customer/refresh-token [post]
+// @Router /api/v1/customers/refresh-token [post]
 func (ctrl ControllerHTTP) RefreshToken(c *fiber.Ctx) error {
 	var req model.CustomerRefreshTokenRequest
 	err := c.BodyParser(&req)
