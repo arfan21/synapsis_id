@@ -9,6 +9,7 @@ const (
 var (
 	ErrEmailAlreadyRegistered = errors.New("email already registered")
 	ErrEmailOrPasswordInvalid = errors.New("email or password invalid")
+	ErrUnauthorizedAccess     = errors.New("unauthorized access")
 )
 
 type ErrNotFound struct {

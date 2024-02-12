@@ -24,4 +24,5 @@ func (s Server) RoutesCustomer(route fiber.Router, ctrl *customerctrl.Controller
 	v1 := route.Group("/v1")
 	v1.Post("/customer/register", ctrl.Register)
 	v1.Post("/customer/login", ctrl.Login)
+	v1.Post("/customer/refresh-token", ctrl.RefreshToken)
 }

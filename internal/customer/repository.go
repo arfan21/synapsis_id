@@ -18,5 +18,6 @@ type Repository interface {
 }
 
 type RepositoryRedis interface {
-	SetRefreshToken(ctx context.Context, token string, expireIn time.Duration) (err error)
+	SetRefreshToken(ctx context.Context, token string, expireIn time.Duration, payload entity.CustomerRefreshToken) (err error)
+	IsRefreshTokenExist(ctx context.Context, token string) (payload entity.CustomerRefreshToken, err error)
 }

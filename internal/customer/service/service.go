@@ -103,7 +103,10 @@ func (s Service) Login(ctx context.Context, req model.CustomerLoginRequest) (res
 		return
 	}
 
-	err = s.repoRedis.SetRefreshToken(ctx, refreshToken, refreshTokenExpire)
+	err = s.repoRedis.SetRefreshToken(ctx, refreshToken, refreshTokenExpire, entity.CustomerRefreshToken{
+		Email: data.Email,
+		ID:    data.ID,
+	})
 	if err != nil {
 		err = fmt.Errorf("customer.service.Login: failed to set refresh token: %w", err)
 		return
@@ -136,6 +139,41 @@ func (s Service) CreateJWTWithExpiry(id, email, secret string, expiry time.Durat
 	if err != nil {
 		err = fmt.Errorf("usecase: failed to create jwt token: %w", err)
 		return
+	}
+
+	return
+}
+
+func (s Service) RefreshToken(ctx context.Context, req model.CustomerRefreshTokenRequest) (res model.CustomerLoginResponse, err error) {
+	err = validation.Validate(req)
+	if err != nil {
+		err = fmt.Errorf("customer.service.RefreshToken: failed to validate request: %w", err)
+		return
+	}
+
+	payload, err := s.repoRedis.IsRefreshTokenExist(ctx, req.RefreshToken)
+	if err != nil {
+		err = fmt.Errorf("customer.service.RefreshToken: failed to check refresh token: %w", err)
+		return
+	}
+
+	accessTokenExpire := time.Duration(config.GetConfig().JWT.AccessTokenExpireIn) * time.Second
+	accessToken, err := s.CreateJWTWithExpiry(
+		payload.ID.String(),
+		payload.Email,
+		config.GetConfig().JWT.AccessTokenSecret,
+		accessTokenExpire,
+	)
+
+	if err != nil {
+		err = fmt.Errorf("customer.service.RefreshToken: failed to create access token: %w", err)
+		return
+	}
+
+	res = model.CustomerLoginResponse{
+		AccessToken: accessToken,
+		ExpiresIn:   int(accessTokenExpire.Seconds()),
+		TokenType:   "Bearer",
 	}
 
 	return

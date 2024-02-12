@@ -18,3 +18,8 @@ type Customer struct {
 func (Customer) TableName() string {
 	return "customers"
 }
+
+type CustomerRefreshToken struct {
+	ID    uuid.UUID `json:"id"`
+	Email string    `json:"email"`
+}

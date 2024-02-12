@@ -12,6 +12,26 @@ definitions:
     - email
     - password
     type: object
+  github_com_arfan21_synapsis_id_internal_model.CustomerLoginResponse:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      expires_in_refresh_token:
+        type: integer
+      refresh_token:
+        type: string
+      token_type:
+        type: string
+    type: object
+  github_com_arfan21_synapsis_id_internal_model.CustomerRefreshTokenRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
   github_com_arfan21_synapsis_id_internal_model.CustomerRegisterRequest:
     properties:
       email:
@@ -81,7 +101,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+            allOf:
+            - $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_arfan21_synapsis_id_internal_model.CustomerLoginResponse'
+              type: object
         "400":
           description: Error validation field
           schema:
@@ -98,6 +123,48 @@ paths:
           schema:
             $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
       summary: Login Customer
+      tags:
+      - Customer
+  /api/v1/customer/refresh-token:
+    post:
+      consumes:
+      - application/json
+      description: Refresh Token Customer
+      parameters:
+      - description: Payload Customer Refresh Token Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arfan21_synapsis_id_internal_model.CustomerRefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/github_com_arfan21_synapsis_id_internal_model.CustomerLoginResponse'
+              type: object
+        "400":
+          description: Error validation field
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+            - properties:
+                errors:
+                  items:
+                    $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.ErrValidationResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+      summary: Refresh Token Customer
       tags:
       - Customer
   /api/v1/customer/register:

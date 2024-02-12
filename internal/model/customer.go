@@ -15,6 +15,10 @@ type CustomerLoginResponse struct {
 	AccessToken           string `json:"access_token"`
 	ExpiresIn             int    `json:"expires_in"`
 	TokenType             string `json:"token_type"`
-	RefreshToken          string `json:"refresh_token"`
-	ExpiresInRefreshToken int    `json:"expires_in_refresh_token"`
+	RefreshToken          string `json:"refresh_token,omitempty"`
+	ExpiresInRefreshToken int    `json:"expires_in_refresh_token,omitempty"`
+}
+
+type CustomerRefreshTokenRequest struct {
+	RefreshToken string `json:"refresh_token" validate:"required"`
 }
