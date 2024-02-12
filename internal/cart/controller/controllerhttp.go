@@ -90,6 +90,7 @@ func (ctrl ControllerHTTP) GetByCustomerID(c *fiber.Ctx) error {
 // @Param Authorization header string true "With the bearer started"
 // @Param body body model.DeleteCartRequest true "Payload Delete Cart Request"
 // @Success 200 {object} pkgutil.HTTPResponse
+// @Failure 400 {object} pkgutil.HTTPResponse{errors=[]pkgutil.ErrValidationResponse} "Error validation field"
 // @Failure 500 {object} pkgutil.HTTPResponse
 // @Router /api/v1/carts [delete]
 func (ctrl ControllerHTTP) Delete(c *fiber.Ctx) error {

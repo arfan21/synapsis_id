@@ -22,6 +22,7 @@ func New(svc product.Service) *ControllerHTTP {
 // @Tags Product
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "With the bearer started"
 // @Param body body model.ProductCreateRequest true "Payload Create Product Request"
 // @Success 201 {object} pkgutil.HTTPResponse
 // @Failure 400 {object} pkgutil.HTTPResponse{errors=[]pkgutil.ErrValidationResponse} "Error validation field"
@@ -75,8 +76,8 @@ func (ctrl ControllerHTTP) GetCategories(c *fiber.Ctx) error {
 // @Produce json
 // @Param page query string true "Page"
 // @Param limit query string true "Limit"
-// @Param name query string true "Name of product"
-// @Param category_id query string true "Category id of product"
+// @Param name query string false "Name of product"
+// @Param category_id query string false "Category id of product"
 // @Success 200 {object} pkgutil.HTTPResponse{data=pkgutil.PaginationResponse{data=model.GetProductResponse}}
 // @Failure 500 {object} pkgutil.HTTPResponse
 // @Router /api/v1/products [get]

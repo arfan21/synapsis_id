@@ -209,6 +209,17 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+        "400":
+          description: Error validation field
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+            - properties:
+                errors:
+                  items:
+                    $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.ErrValidationResponse'
+                  type: array
+              type: object
         "500":
           description: Internal Server Error
           schema:
@@ -454,12 +465,10 @@ paths:
       - description: Name of product
         in: query
         name: name
-        required: true
         type: string
       - description: Category id of product
         in: query
         name: category_id
-        required: true
         type: string
       produces:
       - application/json
@@ -490,6 +499,11 @@ paths:
       - application/json
       description: Create Product
       parameters:
+      - description: With the bearer started
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Payload Create Product Request
         in: body
         name: body
