@@ -2,7 +2,7 @@
 
 ### Database Schema
 
-![Database Schema](https://raw.githubusercontent.com/arfan21/synapsis_id/main/docs/schema_db.png?token=GHSAT0AAAAAACG7HQFAIFF4KRY6JZEL3XBOZOJAHOA)
+![Database Schema](https://github.com/arfan21/synapsis_id/assets/48755707/cd3bafa0-d6f2-451a-87ac-8e434681b42e)
 
 ### Prerequisites
 
