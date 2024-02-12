@@ -2,12 +2,14 @@ package productrepo
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/arfan21/synapsis_id/internal/entity"
 	"github.com/arfan21/synapsis_id/internal/model"
+	"github.com/arfan21/synapsis_id/pkg/constant"
 	dbpostgres "github.com/arfan21/synapsis_id/pkg/db/postgres"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -220,6 +222,60 @@ func (r Repository) GetTotalProduct(ctx context.Context, filter model.GetListPro
 
 	if rows.Err() != nil {
 		err = fmt.Errorf("product.repository.GetProducts: failed after scan total product: %w", err)
+		return
+	}
+
+	return
+}
+
+func (r Repository) IsProductExist(ctx context.Context, id string) (exist bool, err error) {
+	query := `
+		SELECT EXISTS (SELECT id FROM products WHERE id = $1)
+	`
+
+	err = r.db.QueryRow(ctx, query, id).Scan(&exist)
+	if err != nil {
+		err = fmt.Errorf("product.repository.IsProductExist: failed to check product exist: %w", err)
+		return
+	}
+
+	return
+}
+
+func (r Repository) GetProductByID(ctx context.Context, id string) (result entity.Product, err error) {
+	query := `
+		SELECT
+			p.id,
+			p.name,
+			p.stok,
+			p.price,
+			pc.id AS category_id,
+			pc.name AS category_name,
+			c.id AS owner_id,
+			c.fullname AS owner_name
+		FROM
+			products p
+			JOIN product_categories pc ON pc.id = p.category_id
+			JOIN customers c ON c.id = p.customer_id
+		WHERE
+			p.id = $1
+	`
+
+	err = r.db.QueryRow(ctx, query, id).Scan(
+		&result.ID,
+		&result.Name,
+		&result.Stok,
+		&result.Price,
+		&result.Category.ID,
+		&result.Category.Name,
+		&result.Customer.ID,
+		&result.Customer.Fullname,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			err = constant.ErrProductNotFound
+		}
+		err = fmt.Errorf("product.repository.GetProductByID: failed to get product by id: %w", err)
 		return
 	}
 

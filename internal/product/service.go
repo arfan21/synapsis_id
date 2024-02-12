@@ -14,4 +14,7 @@ type Service interface {
 		total int,
 		err error,
 	)
+
+	IsProductExist(ctx context.Context, id string) (exist bool, err error)
+	GetProductByID(ctx context.Context, id string) (res model.GetProductResponse, err error)
 }

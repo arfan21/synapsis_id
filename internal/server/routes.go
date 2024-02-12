@@ -1,6 +1,9 @@
 package server
 
 import (
+	cartctrl "github.com/arfan21/synapsis_id/internal/cart/controller"
+	cartrepo "github.com/arfan21/synapsis_id/internal/cart/repository"
+	cartsvc "github.com/arfan21/synapsis_id/internal/cart/service"
 	customerctrl "github.com/arfan21/synapsis_id/internal/customer/controller"
 	customerrepo "github.com/arfan21/synapsis_id/internal/customer/repository"
 	customersvc "github.com/arfan21/synapsis_id/internal/customer/service"
@@ -25,8 +28,13 @@ func (s *Server) Routes() {
 	productSvc := productsvc.New(productRepo)
 	productCtrl := productctrl.New(productSvc)
 
+	cartRepo := cartrepo.New(s.db)
+	cartSvc := cartsvc.New(cartRepo, productSvc)
+	cartCtrl := cartctrl.New(cartSvc)
+
 	s.RoutesCustomer(api, customerCtrl)
 	s.RoutesProduct(api, productCtrl)
+	s.RoutesCart(api, cartCtrl)
 }
 
 func (s Server) RoutesCustomer(route fiber.Router, ctrl *customerctrl.ControllerHTTP) {
@@ -43,4 +51,10 @@ func (s Server) RoutesProduct(route fiber.Router, ctrl *productctrl.ControllerHT
 	productsV1.Post("", middleware.JWTAuth, ctrl.Create)
 	productsV1.Get("", ctrl.GetProducts)
 	productsV1.Get("/categories", ctrl.GetCategories)
+}
+
+func (s Server) RoutesCart(route fiber.Router, ctrl *cartctrl.ControllerHTTP) {
+	v1 := route.Group("/v1")
+	cartsV1 := v1.Group("/carts")
+	cartsV1.Post("", middleware.JWTAuth, ctrl.Create)
 }

@@ -62,7 +62,7 @@ func FiberErrorHandler(ctx *fiber.Ctx, err error) error {
 
 	if errors.Is(err, pgx.ErrNoRows) {
 		defaultRes.Code = fiber.StatusNotFound
-		defaultRes.Message = pgx.ErrNoRows.Error()
+		defaultRes.Message = "data not found"
 	}
 
 	var unmarshalTypeError *json.UnmarshalTypeError
@@ -109,6 +109,21 @@ func FiberErrorHandler(ctx *fiber.Ctx, err error) error {
 	if strings.Contains(strings.ToLower(err.Error()), strings.ToLower("invalid UUID")) {
 		defaultRes.Code = fiber.StatusBadRequest
 		defaultRes.Message = constant.ErrInvalidUUID.Error()
+	}
+
+	if errors.Is(err, constant.ErrProductNotFound) {
+		defaultRes.Code = fiber.StatusNotFound
+		defaultRes.Message = constant.ErrProductNotFound.Error()
+	}
+
+	if errors.Is(err, constant.ErrProductAlreadyAddedToCart) {
+		defaultRes.Code = fiber.StatusConflict
+		defaultRes.Message = constant.ErrProductAlreadyAddedToCart.Error()
+	}
+
+	if errors.Is(err, constant.ErrCannotAddOwnProductToCart) {
+		defaultRes.Code = fiber.StatusConflict
+		defaultRes.Message = constant.ErrCannotAddOwnProductToCart.Error()
 	}
 
 	if defaultRes.Code >= 500 {

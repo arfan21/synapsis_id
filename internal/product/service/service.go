@@ -131,3 +131,26 @@ func (s Service) GetProducts(ctx context.Context, req model.GetListProductReques
 
 	return
 }
+
+func (s Service) IsProductExist(ctx context.Context, id string) (exist bool, err error) {
+	return s.repo.IsProductExist(ctx, id)
+}
+
+func (s Service) GetProductByID(ctx context.Context, id string) (res model.GetProductResponse, err error) {
+	result, err := s.repo.GetProductByID(ctx, id)
+	if err != nil {
+		err = fmt.Errorf("product.service.GetProductByID: failed to get product by id : %w", err)
+		return
+	}
+
+	res.ID = result.ID
+	res.Name = result.Name
+	res.Stok = result.Stok
+	res.Price = result.Price
+	res.CategoryID = result.Category.ID
+	res.CategoryName = result.Category.Name
+	res.OwnerID = result.Customer.ID
+	res.OwnerName = result.Customer.Fullname
+
+	return
+}

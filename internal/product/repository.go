@@ -18,4 +18,6 @@ type Repository interface {
 	GetCategories(ctx context.Context) (result []entity.ProductCategory, err error)
 	GetProducts(ctx context.Context, filter model.GetListProductRequest) (result []entity.Product, err error)
 	GetTotalProduct(ctx context.Context, filter model.GetListProductRequest) (result int, err error)
+	IsProductExist(ctx context.Context, id string) (exist bool, err error)
+	GetProductByID(ctx context.Context, id string) (result entity.Product, err error)
 }

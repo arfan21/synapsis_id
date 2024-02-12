@@ -8,7 +8,8 @@ CREATE TABLE
         created_at TIMESTAMP DEFAULT now (),
         updated_at TIMESTAMP DEFAULT now (),
         CONSTRAINT fk_carts_customers FOREIGN KEY (customer_id) REFERENCES customers (id),
-        CONSTRAINT fk_carts_products FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
+        CONSTRAINT fk_carts_products FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
+        CONSTRAINT unique_cart UNIQUE (customer_id, product_id)
     );
 
 -- +goose StatementEnd

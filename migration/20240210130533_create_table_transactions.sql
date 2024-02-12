@@ -23,8 +23,8 @@ CREATE TABLE
 -- +goose StatementEnd
 -- +goose Down
 -- +goose StatementBegin
-DROP TYPE IF EXISTS transaction_status;
-
 DROP TABLE IF EXISTS transactions;
+
+DROP TYPE IF EXISTS transaction_status;
 
 -- +goose StatementEnd
