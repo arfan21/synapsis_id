@@ -81,3 +81,34 @@ func (ctrl ControllerHTTP) GetByCustomerID(c *fiber.Ctx) error {
 		Data: results,
 	})
 }
+
+// @Summary Delete Cart By Product ID
+// @Description Delete Cart By Product ID
+// @Tags Cart
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "With the bearer started"
+// @Param body body model.DeleteCartRequest true "Payload Delete Cart Request"
+// @Success 200 {object} pkgutil.HTTPResponse
+// @Failure 500 {object} pkgutil.HTTPResponse
+// @Router /api/v1/carts [delete]
+func (ctrl ControllerHTTP) Delete(c *fiber.Ctx) error {
+	claims, ok := c.Locals(constant.JWTClaimsContextKey).(model.JWTClaims)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(pkgutil.HTTPResponse{
+			Code:    fiber.StatusUnauthorized,
+			Message: "invalid or expired token",
+		})
+	}
+
+	var req model.DeleteCartRequest
+	err := c.BodyParser(&req)
+	exception.PanicIfNeeded(err)
+
+	err = ctrl.svc.Delete(c.UserContext(), claims.Subject, req.ProductID.String())
+	exception.PanicIfNeeded(err)
+
+	return c.Status(fiber.StatusOK).JSON(pkgutil.HTTPResponse{
+		Code: fiber.StatusOK,
+	})
+}

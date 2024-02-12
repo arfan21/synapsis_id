@@ -57,6 +57,13 @@ definitions:
     - fullname
     - password
     type: object
+  github_com_arfan21_synapsis_id_internal_model.DeleteCartRequest:
+    properties:
+      product_id:
+        type: string
+    required:
+    - product_id
+    type: object
   github_com_arfan21_synapsis_id_internal_model.GetCartResponse:
     properties:
       created_at:
@@ -172,6 +179,36 @@ info:
   version: "1.0"
 paths:
   /api/v1/carts:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Cart By Product ID
+      parameters:
+      - description: With the bearer started
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Payload Delete Cart Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arfan21_synapsis_id_internal_model.DeleteCartRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+      summary: Delete Cart By Product ID
+      tags:
+      - Cart
     get:
       consumes:
       - application/json

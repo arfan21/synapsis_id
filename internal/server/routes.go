@@ -58,4 +58,5 @@ func (s Server) RoutesCart(route fiber.Router, ctrl *cartctrl.ControllerHTTP) {
 	cartsV1 := v1.Group("/carts")
 	cartsV1.Post("", middleware.JWTAuth, ctrl.Create)
 	cartsV1.Get("", middleware.JWTAuth, ctrl.GetByCustomerID)
+	cartsV1.Delete("", middleware.JWTAuth, ctrl.Delete)
 }

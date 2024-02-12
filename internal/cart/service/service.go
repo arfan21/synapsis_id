@@ -79,3 +79,13 @@ func (s Service) GetByCustomerID(ctx context.Context, customerID string) (res []
 
 	return
 }
+
+func (s Service) Delete(ctx context.Context, customerID, productID string) (err error) {
+	err = s.repo.Delete(ctx, customerID, productID)
+	if err != nil {
+		err = fmt.Errorf("cart.service.Delete: failed to delete cart: %w", err)
+		return
+	}
+
+	return
+}

@@ -21,3 +21,7 @@ type GetCartResponse struct {
 	ProductPrice decimal.Decimal `json:"product_price" swaggertype:"string"`
 	CreatedAt    time.Time       `json:"created_at"`
 }
+
+type DeleteCartRequest struct {
+	ProductID uuid.UUID `json:"product_id" validate:"required" swaggertype:"string"`
+}
