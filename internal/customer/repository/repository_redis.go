@@ -42,13 +42,13 @@ func (r RepositoryRedis) IsRefreshTokenExist(ctx context.Context, token string) 
 		if errors.Is(err, redis.Nil) {
 			err = constant.ErrUnauthorizedAccess
 		}
-		err = fmt.Errorf("customer.repository_redis.GetRefreshToken: failed to get refresh token: %w", err)
+		err = fmt.Errorf("customer.repository_redis.IsRefreshTokenExist: failed to get refresh token: %w", err)
 		return
 	}
 
 	err = json.Unmarshal([]byte(resultStr), &payload)
 	if err != nil {
-		err = fmt.Errorf("customer.repository_redis.GetRefreshToken: failed to unmarshal payload: %w", err)
+		err = fmt.Errorf("customer.repository_redis.IsRefreshTokenExist: failed to unmarshal payload: %w", err)
 		return
 	}
 
