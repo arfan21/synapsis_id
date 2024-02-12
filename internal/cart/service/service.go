@@ -52,3 +52,30 @@ func (s Service) Create(ctx context.Context, req model.CreateCartRequest) (err e
 
 	return
 }
+
+func (s Service) GetByCustomerID(ctx context.Context, customerID string) (res []model.GetCartResponse, err error) {
+	results, err := s.repo.GetByCustomerID(ctx, customerID)
+	if err != nil {
+		err = fmt.Errorf("cart.service.GetByCustomerID: failed to get cart by customer id: %w", err)
+		return
+	}
+
+	if len(results) == 0 {
+		res = make([]model.GetCartResponse, 0)
+		return
+	}
+
+	res = make([]model.GetCartResponse, len(results))
+
+	for i, v := range results {
+		res[i].ID = v.ID
+		res[i].CustomerID = v.CustomerID
+		res[i].ProductID = v.ProductID
+		res[i].CreatedAt = v.CreatedAt
+		res[i].ProductName = v.Product.Name
+		res[i].ProductPrice = v.Product.Price
+		res[i].ProductStok = v.Product.Stok
+	}
+
+	return
+}

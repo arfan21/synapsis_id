@@ -14,7 +14,7 @@ type ProductCreateRequest struct {
 }
 
 type GetCategoryResponse struct {
-	ID   uuid.UUID `json:"id"`
+	ID   uuid.UUID `json:"id" swaggertype:"string"`
 	Name string    `json:"string"`
 }
 

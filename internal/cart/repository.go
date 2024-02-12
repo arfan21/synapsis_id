@@ -13,4 +13,5 @@ type Repository interface {
 	WithTx(tx pgx.Tx) *cartrepo.Repository
 
 	Create(ctx context.Context, cart entity.Cart) (err error)
+	GetByCustomerID(ctx context.Context, customerID string) (data []entity.Cart, err error)
 }

@@ -57,6 +57,23 @@ definitions:
     - fullname
     - password
     type: object
+  github_com_arfan21_synapsis_id_internal_model.GetCartResponse:
+    properties:
+      created_at:
+        type: string
+      customer_id:
+        type: string
+      id:
+        type: string
+      product_id:
+        type: string
+      product_name:
+        type: string
+      product_price:
+        type: string
+      product_stok:
+        type: integer
+    type: object
   github_com_arfan21_synapsis_id_internal_model.GetCategoryResponse:
     properties:
       id:
@@ -155,6 +172,37 @@ info:
   version: "1.0"
 paths:
   /api/v1/carts:
+    get:
+      consumes:
+      - application/json
+      description: Get Cart By Customer ID
+      parameters:
+      - description: With the bearer started
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/github_com_arfan21_synapsis_id_internal_model.GetCartResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+      summary: Get Cart By Customer ID
+      tags:
+      - Cart
     post:
       consumes:
       - application/json

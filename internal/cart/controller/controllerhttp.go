@@ -54,3 +54,30 @@ func (ctrl ControllerHTTP) Create(c *fiber.Ctx) error {
 		Code: fiber.StatusCreated,
 	})
 }
+
+// @Summary Get Cart By Customer ID
+// @Description Get Cart By Customer ID
+// @Tags Cart
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "With the bearer started"
+// @Success 200 {object} pkgutil.HTTPResponse{data=[]model.GetCartResponse} "Success"
+// @Failure 500 {object} pkgutil.HTTPResponse
+// @Router /api/v1/carts [get]
+func (ctrl ControllerHTTP) GetByCustomerID(c *fiber.Ctx) error {
+	claims, ok := c.Locals(constant.JWTClaimsContextKey).(model.JWTClaims)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(pkgutil.HTTPResponse{
+			Code:    fiber.StatusUnauthorized,
+			Message: "invalid or expired token",
+		})
+	}
+
+	results, err := ctrl.svc.GetByCustomerID(c.UserContext(), claims.Subject)
+	exception.PanicIfNeeded(err)
+
+	return c.Status(fiber.StatusOK).JSON(pkgutil.HTTPResponse{
+		Code: fiber.StatusOK,
+		Data: results,
+	})
+}

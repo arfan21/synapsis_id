@@ -8,4 +8,5 @@ import (
 
 type Service interface {
 	Create(ctx context.Context, req model.CreateCartRequest) (err error)
+	GetByCustomerID(ctx context.Context, customerID string) (res []model.GetCartResponse, err error)
 }

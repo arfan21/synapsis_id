@@ -55,3 +55,51 @@ func (r Repository) Create(ctx context.Context, cart entity.Cart) (err error) {
 
 	return
 }
+
+func (r Repository) GetByCustomerID(ctx context.Context, customerID string) (data []entity.Cart, err error) {
+	query := `
+		SELECT 
+			c.id, 
+			c.customer_id, 
+			c.product_id,
+			c.created_at,
+			p.name,
+			p.price,
+			p.stok
+		FROM carts c
+		JOIN products p ON c.product_id = p.id
+		WHERE c.customer_id = $1
+	`
+
+	rows, err := r.db.Query(ctx, query, customerID)
+	if err != nil {
+		err = fmt.Errorf("cart.repository.GetByCustomerID: failed to get cart by customer id: %w", err)
+		return
+	}
+
+	for rows.Next() {
+		var cart entity.Cart
+		err = rows.Scan(
+			&cart.ID,
+			&cart.CustomerID,
+			&cart.ProductID,
+			&cart.CreatedAt,
+			&cart.Product.Name,
+			&cart.Product.Price,
+			&cart.Product.Stok,
+		)
+		if err != nil {
+			err = fmt.Errorf("cart.repository.GetByCustomerID: failed to scan cart: %w", err)
+			return
+		}
+
+		data = append(data, cart)
+	}
+
+	if rows.Err() != nil {
+		err = fmt.Errorf("product.repository.GetProducts: failed after scan products: %w", err)
+		return
+	}
+
+	return
+}

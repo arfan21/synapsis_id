@@ -24,6 +24,57 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/api/v1/carts": {
+            "get": {
+                "description": "Get Cart By Customer ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cart"
+                ],
+                "summary": "Get Cart By Customer ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "With the bearer started",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/github_com_arfan21_synapsis_id_internal_model.GetCartResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create Cart",
                 "consumes": [
@@ -567,6 +618,32 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 20,
                     "minLength": 8
+                }
+            }
+        },
+        "github_com_arfan21_synapsis_id_internal_model.GetCartResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "customer_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "product_id": {
+                    "type": "string"
+                },
+                "product_name": {
+                    "type": "string"
+                },
+                "product_price": {
+                    "type": "string"
+                },
+                "product_stok": {
+                    "type": "integer"
                 }
             }
         },
