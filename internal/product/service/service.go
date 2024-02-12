@@ -87,3 +87,47 @@ func (s Service) GetCategories(ctx context.Context) (res []model.GetCategoryResp
 
 	return
 }
+
+func (s Service) GetProducts(ctx context.Context, req model.GetListProductRequest) (
+	res []model.GetProductResponse,
+	total int,
+	err error,
+) {
+	err = validation.Validate(req)
+	if err != nil {
+		err = fmt.Errorf("product.service.GetProducts: failed to validate request : %w", err)
+		return
+	}
+
+	results, err := s.repo.GetProducts(ctx, req)
+	if err != nil {
+		err = fmt.Errorf("product.service.GetProducts: failed to get products from db : %w", err)
+		return
+	}
+
+	if len(results) == 0 {
+		res = make([]model.GetProductResponse, 0)
+		return
+	}
+
+	res = make([]model.GetProductResponse, len(results))
+
+	for i, result := range results {
+		res[i].ID = result.ID
+		res[i].Name = result.Name
+		res[i].Stok = result.Stok
+		res[i].Price = result.Price
+		res[i].CategoryID = result.Category.ID
+		res[i].CategoryName = result.Category.Name
+		res[i].OwnerID = result.Customer.ID
+		res[i].OwnerName = result.Customer.Fullname
+	}
+
+	total, err = s.repo.GetTotalProduct(ctx, req)
+	if err != nil {
+		err = fmt.Errorf("product.service.GetProducts: failed to get total product from db : %w", err)
+		return
+	}
+
+	return
+}

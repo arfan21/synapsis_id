@@ -67,3 +67,42 @@ func (ctrl ControllerHTTP) GetCategories(c *fiber.Ctx) error {
 		Data: res,
 	})
 }
+
+// @Summary Get Products
+// @Description Get Products
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param page query string true "Page"
+// @Param limit query string true "Limit"
+// @Param name query string true "Name of product"
+// @Param category_id query string true "Category id of product"
+// @Success 200 {object} pkgutil.HTTPResponse{data=pkgutil.PaginationResponse{data=model.GetProductResponse}}
+// @Failure 500 {object} pkgutil.HTTPResponse
+// @Router /api/v1/products [get]
+func (ctrl ControllerHTTP) GetProducts(c *fiber.Ctx) error {
+	reqQuery := model.GetListProductRequest{}
+	err := c.QueryParser(&reqQuery)
+	exception.PanicIfNeeded(err)
+
+	res, total, err := ctrl.svc.GetProducts(c.UserContext(), reqQuery)
+	exception.PanicIfNeeded(err)
+
+	totalPage := 0
+	if total%reqQuery.Limit != 0 {
+		totalPage = total/reqQuery.Limit + 1
+	} else {
+		totalPage = total / reqQuery.Limit
+	}
+
+	return c.Status(fiber.StatusOK).JSON(pkgutil.HTTPResponse{
+		Code: fiber.StatusOK,
+		Data: pkgutil.PaginationResponse{
+			TotalData: total,
+			TotalPage: totalPage,
+			Page:      reqQuery.Page,
+			Limit:     reqQuery.Limit,
+			Data:      res,
+		},
+	})
+}
