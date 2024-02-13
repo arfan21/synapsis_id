@@ -717,6 +717,74 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/transactions/pay": {
+            "post": {
+                "description": "Pay transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Pay",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "With the bearer started",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload Transaction Pay Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arfan21_synapsis_id_internal_model.TransactionPayRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error validation field",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.ErrValidationResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -939,6 +1007,21 @@ const docTemplate = `{
                 },
                 "stok": {
                     "type": "integer"
+                }
+            }
+        },
+        "github_com_arfan21_synapsis_id_internal_model.TransactionPayRequest": {
+            "type": "object",
+            "required": [
+                "total_amount",
+                "transaction_id"
+            ],
+            "properties": {
+                "total_amount": {
+                    "type": "string"
+                },
+                "transaction_id": {
+                    "type": "string"
                 }
             }
         },

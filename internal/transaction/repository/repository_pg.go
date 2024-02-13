@@ -78,3 +78,43 @@ func (r Repository) CreateDetail(ctx context.Context, data []entity.TransactionD
 
 	return
 }
+
+func (r Repository) GetByID(ctx context.Context, id uuid.UUID) (result entity.Transaction, err error) {
+	query := `
+		SELECT id, customer_id, payment_method_id, total_amount, status, created_at
+		FROM transactions
+		WHERE id = $1
+	`
+
+	err = r.db.QueryRow(ctx, query, id).Scan(
+		&result.ID,
+		&result.CustomerID,
+		&result.PaymentMethodID,
+		&result.TotalAmount,
+		&result.Status,
+		&result.CreatedAt,
+	)
+
+	if err != nil {
+		err = fmt.Errorf("transaction.repository.GetByID: failed to get transaction by id: %w", err)
+		return
+	}
+
+	return
+}
+
+func (r Repository) UpdateStatus(ctx context.Context, id uuid.UUID, status entity.TransactionStatus) (err error) {
+	query := `
+		UPDATE transactions
+		SET status = $1
+		WHERE id = $2
+	`
+
+	_, err = r.db.Exec(ctx, query, status, id)
+	if err != nil {
+		err = fmt.Errorf("transaction.repository.UpdateStatus: failed to update status: %w", err)
+		return
+	}
+
+	return
+}

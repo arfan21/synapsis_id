@@ -55,3 +55,27 @@ func (ctrl ControllerHTTP) Checkout(c *fiber.Ctx) error {
 		Data: res,
 	})
 }
+
+// @Summary Pay
+// @Description Pay transaction
+// @Tags Transaction
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "With the bearer started"
+// @Param body body model.TransactionPayRequest true "Payload Transaction Pay Request"
+// @Success 200 {object} pkgutil.HTTPResponse
+// @Failure 400 {object} pkgutil.HTTPResponse{errors=[]pkgutil.ErrValidationResponse} "Error validation field"
+// @Failure 500 {object} pkgutil.HTTPResponse
+// @Router /api/v1/transactions/pay [post]
+func (ctrl ControllerHTTP) Pay(c *fiber.Ctx) error {
+	var req model.TransactionPayRequest
+	err := c.BodyParser(&req)
+	exception.PanicIfNeeded(err)
+
+	err = ctrl.svc.Pay(c.UserContext(), req)
+	exception.PanicIfNeeded(err)
+
+	return c.Status(fiber.StatusOK).JSON(pkgutil.HTTPResponse{
+		Code: fiber.StatusOK,
+	})
+}

@@ -149,6 +149,16 @@ definitions:
     - price
     - stok
     type: object
+  github_com_arfan21_synapsis_id_internal_model.TransactionPayRequest:
+    properties:
+      total_amount:
+        type: string
+      transaction_id:
+        type: string
+    required:
+    - total_amount
+    - transaction_id
+    type: object
   github_com_arfan21_synapsis_id_pkg_pkgutil.ErrValidationResponse:
     properties:
       field:
@@ -617,6 +627,48 @@ paths:
           schema:
             $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
       summary: Checkout
+      tags:
+      - Transaction
+  /api/v1/transactions/pay:
+    post:
+      consumes:
+      - application/json
+      description: Pay transaction
+      parameters:
+      - description: With the bearer started
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Payload Transaction Pay Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_arfan21_synapsis_id_internal_model.TransactionPayRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+        "400":
+          description: Error validation field
+          schema:
+            allOf:
+            - $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+            - properties:
+                errors:
+                  items:
+                    $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.ErrValidationResponse'
+                  type: array
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse'
+      summary: Pay
       tags:
       - Transaction
 swagger: "2.0"

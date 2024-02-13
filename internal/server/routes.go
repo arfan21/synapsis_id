@@ -87,4 +87,5 @@ func (s Server) RoutesTransaction(route fiber.Router, ctrl *transactionctrl.Cont
 	v1 := route.Group("/v1")
 	transactionsV1 := v1.Group("/transactions")
 	transactionsV1.Post("/checkout", middleware.JWTAuth, ctrl.Checkout)
+	transactionsV1.Post("/pay", middleware.JWTAuth, ctrl.Pay)
 }

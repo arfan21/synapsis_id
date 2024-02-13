@@ -126,3 +126,62 @@ func (s Service) Checkout(ctx context.Context, req model.CreateTransactionReques
 
 	return
 }
+
+func (s Service) Pay(ctx context.Context, req model.TransactionPayRequest) (err error) {
+	err = validation.Validate(req)
+	if err != nil {
+		err = fmt.Errorf("transaction.service.Pay: failed to validate request : %w", err)
+		return
+	}
+
+	data, err := s.repo.GetByID(ctx, req.TransactionID)
+	if err != nil {
+		err = fmt.Errorf("transaction.service.Pay: failed to get transaction by id : %w", err)
+		return
+	}
+
+	if data.Status != entity.TransactionStatusWaitingPayment {
+		err = fmt.Errorf("transaction.service.Pay: transaction status is not waiting payment : %w", constant.ErrTransactionAlreadyPaidOrFailed)
+		return
+	}
+
+	if data.TotalAmount.Cmp(req.TotalAmount) != 0 {
+		err = fmt.Errorf("transaction.service.Pay: amount is not enough : %w", constant.ErrPaymentNotEqualTotalAmount)
+		return
+	}
+
+	tx, err := s.repo.Begin(ctx)
+	if err != nil {
+		err = fmt.Errorf("transaction.service.Pay: failed to begin transaction : %w", err)
+		return
+	}
+
+	defer func() {
+		if err != nil {
+			tx.Rollback(ctx)
+			return
+		}
+
+		err = tx.Commit(ctx)
+		if err != nil {
+			err = fmt.Errorf("transaction.service.Pay: failed to commit transaction : %w", err)
+			return
+		}
+	}()
+
+	err = s.paymentSvc.WithTx(tx).CreatePayment(ctx, model.CreatePaymentRequest{
+		TransactionID: req.TransactionID,
+	})
+	if err != nil {
+		err = fmt.Errorf("transaction.service.Pay: failed to create payment : %w", err)
+		return
+	}
+
+	err = s.repo.WithTx(tx).UpdateStatus(ctx, req.TransactionID, entity.TransactionStatusProcessing)
+	if err != nil {
+		err = fmt.Errorf("transaction.service.Pay: failed to update transaction status : %w", err)
+		return
+	}
+
+	return
+}
