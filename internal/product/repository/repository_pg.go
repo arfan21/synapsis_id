@@ -281,3 +281,45 @@ func (r Repository) GetProductByID(ctx context.Context, id string) (result entit
 
 	return
 }
+
+func (r Repository) BatchUpdateStok(ctx context.Context, data []entity.Product) (err error) {
+	query := `
+		UPDATE products
+		SET stok = $1
+		WHERE id = $2 AND stok >= (stok - $1)
+	`
+
+	tx, err := r.Begin(ctx)
+	if err != nil {
+		err = fmt.Errorf("product.repository.BatchUpdateStok: failed to begin transaction: %w", err)
+		return
+	}
+
+	defer func() {
+		if err != nil {
+			tx.Rollback(ctx)
+			return
+		}
+
+		err = tx.Commit(ctx)
+		if err != nil {
+			err = fmt.Errorf("product.repository.BatchUpdateStok: failed to commit transaction: %w", err)
+			return
+		}
+	}()
+
+	for _, item := range data {
+		cmd, err := tx.Exec(ctx, query, item.Stok, item.ID)
+		if err != nil {
+			err = fmt.Errorf("product.repository.BatchUpdateStok: failed to batch deduct stok: %w", err)
+			return err
+		}
+
+		if cmd.RowsAffected() == 0 {
+			err = fmt.Errorf("product.repository.BatchUpdateStok: nothing updated: %w", constant.ErrProductNotFoundOrStok)
+			return err
+		}
+	}
+
+	return
+}

@@ -20,4 +20,5 @@ type Repository interface {
 	GetTotalProduct(ctx context.Context, filter model.GetListProductRequest) (result int, err error)
 	IsProductExist(ctx context.Context, id string) (exist bool, err error)
 	GetProductByID(ctx context.Context, id string) (result entity.Product, err error)
+	BatchUpdateStok(ctx context.Context, data []entity.Product) (err error)
 }

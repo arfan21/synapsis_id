@@ -126,6 +126,26 @@ func FiberErrorHandler(ctx *fiber.Ctx, err error) error {
 		defaultRes.Message = constant.ErrCannotAddOwnProductToCart.Error()
 	}
 
+	if errors.Is(err, constant.ErrPaymentMethodNotFound) {
+		defaultRes.Code = fiber.StatusNotFound
+		defaultRes.Message = constant.ErrPaymentMethodNotFound.Error()
+	}
+
+	if errors.Is(err, constant.ErrNoProductInCart) {
+		defaultRes.Code = fiber.StatusNotFound
+		defaultRes.Message = constant.ErrNoProductInCart.Error()
+	}
+
+	if errors.Is(err, constant.ErrProductStokNotEnough) {
+		defaultRes.Code = fiber.StatusBadRequest
+		defaultRes.Message = constant.ErrProductStokNotEnough.Error()
+	}
+
+	if errors.Is(err, constant.ErrProductNotFoundOrStok) {
+		defaultRes.Code = fiber.StatusBadRequest
+		defaultRes.Message = constant.ErrProductNotFoundOrStok.Error()
+	}
+
 	if defaultRes.Code >= 500 {
 		defaultRes.Message = http.StatusText(defaultRes.Code)
 	}

@@ -10,6 +10,7 @@ import (
 	"github.com/arfan21/synapsis_id/pkg/constant"
 	"github.com/arfan21/synapsis_id/pkg/validation"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 )
 
 type Service struct {
@@ -18,6 +19,11 @@ type Service struct {
 
 func New(repo product.Repository) *Service {
 	return &Service{repo: repo}
+}
+
+func (s Service) WithTx(tx pgx.Tx) product.Service {
+	s.repo = s.repo.WithTx(tx)
+	return &s
 }
 
 func (s Service) Create(ctx context.Context, req model.ProductCreateRequest) (err error) {
@@ -151,6 +157,25 @@ func (s Service) GetProductByID(ctx context.Context, id string) (res model.GetPr
 	res.CategoryName = result.Category.Name
 	res.OwnerID = result.Customer.ID
 	res.OwnerName = result.Customer.Fullname
+
+	return
+}
+
+func (s Service) BatchUpdateStok(ctx context.Context, req []model.UpdateStokRequest) (err error) {
+	data := make([]entity.Product, len(req))
+
+	for i, v := range req {
+		data[i] = entity.Product{
+			ID:   v.ID,
+			Stok: v.Stok,
+		}
+	}
+
+	err = s.repo.BatchUpdateStok(ctx, data)
+	if err != nil {
+		err = fmt.Errorf("product.service.BatchUpdateStok: failed to update batch stok : %w", err)
+		return
+	}
 
 	return
 }
