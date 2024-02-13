@@ -724,7 +724,8 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "customer_id",
-                "product_id"
+                "product_id",
+                "qty"
             ],
             "properties": {
                 "customer_id": {
@@ -732,6 +733,10 @@ const docTemplate = `{
                 },
                 "product_id": {
                     "type": "string"
+                },
+                "qty": {
+                    "type": "integer",
+                    "minimum": 1
                 }
             }
         },
@@ -852,6 +857,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "product_stok": {
+                    "type": "integer"
+                },
+                "qty": {
                     "type": "integer"
                 }
             }

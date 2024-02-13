@@ -6,9 +6,13 @@ definitions:
         type: string
       product_id:
         type: string
+      qty:
+        minimum: 1
+        type: integer
     required:
     - customer_id
     - product_id
+    - qty
     type: object
   github_com_arfan21_synapsis_id_internal_model.CreateTransactionRequest:
     properties:
@@ -89,6 +93,8 @@ definitions:
       product_price:
         type: string
       product_stok:
+        type: integer
+      qty:
         type: integer
     type: object
   github_com_arfan21_synapsis_id_internal_model.GetCategoryResponse:

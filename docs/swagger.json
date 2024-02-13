@@ -718,7 +718,8 @@
             "type": "object",
             "required": [
                 "customer_id",
-                "product_id"
+                "product_id",
+                "qty"
             ],
             "properties": {
                 "customer_id": {
@@ -726,6 +727,10 @@
                 },
                 "product_id": {
                     "type": "string"
+                },
+                "qty": {
+                    "type": "integer",
+                    "minimum": 1
                 }
             }
         },
@@ -846,6 +851,9 @@
                     "type": "string"
                 },
                 "product_stok": {
+                    "type": "integer"
+                },
+                "qty": {
                     "type": "integer"
                 }
             }

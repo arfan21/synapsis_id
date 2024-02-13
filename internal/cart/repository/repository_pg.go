@@ -36,11 +36,11 @@ func (r Repository) WithTx(tx pgx.Tx) *Repository {
 
 func (r Repository) Create(ctx context.Context, cart entity.Cart) (err error) {
 	query := `
-		INSERT INTO carts (customer_id, product_id)
-		VALUES ($1, $2)
+		INSERT INTO carts (customer_id, product_id, qty)
+		VALUES ($1, $2, $3)
 	`
 
-	_, err = r.db.Exec(ctx, query, cart.CustomerID, cart.ProductID)
+	_, err = r.db.Exec(ctx, query, cart.CustomerID, cart.ProductID, cart.Qty)
 	if err != nil {
 		var pgxError *pgconn.PgError
 		if errors.As(err, &pgxError) {
@@ -65,7 +65,8 @@ func (r Repository) GetByCustomerID(ctx context.Context, customerID string) (dat
 			c.created_at,
 			p.name,
 			p.price,
-			p.stok
+			p.stok,
+			c.qty
 		FROM carts c
 		JOIN products p ON c.product_id = p.id
 		WHERE c.customer_id = $1
@@ -87,6 +88,7 @@ func (r Repository) GetByCustomerID(ctx context.Context, customerID string) (dat
 			&cart.Product.Name,
 			&cart.Product.Price,
 			&cart.Product.Stok,
+			&cart.Qty,
 		)
 		if err != nil {
 			err = fmt.Errorf("cart.repository.GetByCustomerID: failed to scan cart: %w", err)

@@ -2,7 +2,12 @@
 
 ### Database Schema
 
-![Database Schema](https://github.com/arfan21/synapsis_id/assets/48755707/cd3bafa0-d6f2-451a-87ac-8e434681b42e)
+![Database Schema](https://github.com/arfan21/synapsis_id/assets/48755707/e51accc5-79aa-4f7b-9a2a-66999d18b7d8)
+
+### API Specification
+
+-   Swagger Docs: /docs/swagger.json
+-   Postman Collection:
 
 ### Prerequisites
 

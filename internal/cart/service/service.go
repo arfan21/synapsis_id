@@ -45,9 +45,15 @@ func (s Service) Create(ctx context.Context, req model.CreateCartRequest) (err e
 		return
 	}
 
+	if dataProduct.Stok < req.Qty {
+		err = fmt.Errorf("cart.service.Create: product stok is not enough : %w", constant.ErrProductStokNotEnough)
+		return
+	}
+
 	data := entity.Cart{
 		CustomerID: req.CustomerID,
 		ProductID:  req.ProductID,
+		Qty:        req.Qty,
 	}
 
 	err = s.repo.Create(ctx, data)
@@ -81,6 +87,7 @@ func (s Service) GetByCustomerID(ctx context.Context, customerID string) (res []
 		res[i].ProductName = v.Product.Name
 		res[i].ProductPrice = v.Product.Price
 		res[i].ProductStok = v.Product.Stok
+		res[i].Qty = v.Qty
 	}
 
 	return
