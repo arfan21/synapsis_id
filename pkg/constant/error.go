@@ -23,6 +23,7 @@ var (
 	ErrTransactionAlreadyPaid         = errors.New("transaction already paid")
 	ErrTransactionAlreadyPaidOrFailed = errors.New("transaction already paid or failed")
 	ErrPaymentNotEqualTotalAmount     = errors.New("total amount payment not equal with total amount transaction")
+	ErrTxDetailInsertedNotEqual       = errors.New("transaction detail inserted not equal with transaction detail request")
 )
 
 type ErrNotFound struct {

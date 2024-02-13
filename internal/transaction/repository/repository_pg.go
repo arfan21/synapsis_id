@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/arfan21/synapsis_id/internal/entity"
+	"github.com/arfan21/synapsis_id/pkg/constant"
 	dbpostgres "github.com/arfan21/synapsis_id/pkg/db/postgres"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -72,7 +73,7 @@ func (r Repository) CreateDetail(ctx context.Context, data []entity.TransactionD
 	}
 
 	if rowsAffected != int64(len(data)) {
-		err = fmt.Errorf("transaction.repository.CreateDetail: failed to create transaction detail: %w", err)
+		err = fmt.Errorf("transaction.repository.CreateDetail: failed to create transaction detail: %w", constant.ErrTxDetailInsertedNotEqual)
 		return
 	}
 
