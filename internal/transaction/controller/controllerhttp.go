@@ -79,3 +79,31 @@ func (ctrl ControllerHTTP) Pay(c *fiber.Ctx) error {
 		Code: fiber.StatusOK,
 	})
 }
+
+// @Summary Get Transaction By Customer ID
+// @Description Get transaction by customer id
+// @Tags Transaction
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "With the bearer started"
+// @Success 200 {object} pkgutil.HTTPResponse
+// @Failure 400 {object} pkgutil.HTTPResponse{errors=[]pkgutil.ErrValidationResponse} "Error validation field"
+// @Failure 500 {object} pkgutil.HTTPResponse
+// @Router /api/v1/transactions [get]
+func (ctrl ControllerHTTP) GetByCustomerID(c *fiber.Ctx) error {
+	claims, ok := c.Locals(constant.JWTClaimsContextKey).(model.JWTClaims)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(pkgutil.HTTPResponse{
+			Code:    fiber.StatusUnauthorized,
+			Message: "invalid or expired token",
+		})
+	}
+
+	data, err := ctrl.svc.GetByCustomerID(c.UserContext(), claims.Subject)
+	exception.PanicIfNeeded(err)
+
+	return c.Status(fiber.StatusOK).JSON(pkgutil.HTTPResponse{
+		Code: fiber.StatusOK,
+		Data: data,
+	})
+}

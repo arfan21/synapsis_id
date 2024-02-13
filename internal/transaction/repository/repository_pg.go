@@ -118,3 +118,81 @@ func (r Repository) UpdateStatus(ctx context.Context, id uuid.UUID, status entit
 
 	return
 }
+
+func (r Repository) GetByCustomerID(ctx context.Context, customerID string) (result []entity.Transaction, err error) {
+	query := `
+		SELECT 
+			tx.id, 
+			tx.customer_id, 
+			tx.payment_method_id, 
+			tx.total_amount, 
+			tx.status, 
+			tx.created_at,
+			tx.updated_at,
+			pm.name AS payment_method_name,
+			td.id AS detail_id,
+			td.transaction_id AS detail_transaction_id,
+			p.id AS product_id,
+			p.name AS product_name,
+			p.price AS product_price
+		FROM transactions tx
+			JOIN payment_methods pm ON pm.id = tx.payment_method_id
+			JOIN transaction_details td ON td.transaction_id = tx.id
+			JOIN products p ON p.id = td.product_id
+		WHERE tx.customer_id = $1
+	`
+
+	rows, err := r.db.Query(ctx, query, customerID)
+	if err != nil {
+		err = fmt.Errorf("transaction.repository.GetByCustomerID: failed to get transaction by customer id: %w", err)
+		return
+	}
+
+	defer rows.Close()
+
+	mapData := make(map[uuid.UUID]entity.Transaction)
+	for rows.Next() {
+		var tx entity.Transaction
+		var detail entity.TransactionDetail
+		err = rows.Scan(
+			&tx.ID,
+			&tx.CustomerID,
+			&tx.PaymentMethodID,
+			&tx.TotalAmount,
+			&tx.Status,
+			&tx.CreatedAt,
+			&tx.UpdatedAt,
+			&tx.PaymentMethod.Name,
+			&detail.ID,
+			&detail.TransactionID,
+			&detail.ProductID,
+			&detail.Product.Name,
+			&detail.Product.Price,
+		)
+
+		if err != nil {
+			err = fmt.Errorf("transaction.repository.GetByCustomerID: failed to scan data: %w", err)
+			return
+		}
+
+		if currentData, ok := mapData[tx.ID]; !ok {
+			tx.TransactionDetails = append(tx.TransactionDetails, detail)
+			mapData[tx.ID] = tx
+		} else {
+			currentData.TransactionDetails = append(currentData.TransactionDetails, detail)
+			mapData[tx.ID] = currentData
+		}
+
+	}
+
+	if err = rows.Err(); err != nil {
+		err = fmt.Errorf("transaction.repository.GetByCustomerID: failed to get transaction by customer id: %w", err)
+		return
+	}
+
+	for _, item := range mapData {
+		result = append(result, item)
+	}
+
+	return
+}

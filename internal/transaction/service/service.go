@@ -185,3 +185,41 @@ func (s Service) Pay(ctx context.Context, req model.TransactionPayRequest) (err 
 
 	return
 }
+
+func (s Service) GetByCustomerID(ctx context.Context, customerID string) (result []model.GetTransactionResponse, err error) {
+	data, err := s.repo.GetByCustomerID(ctx, customerID)
+	if err != nil {
+		err = fmt.Errorf("transaction.service.GetByCustomerID: failed to get transaction by customer id : %w", err)
+		return
+	}
+
+	if len(data) == 0 {
+		result = make([]model.GetTransactionResponse, 0)
+		return
+	}
+
+	result = make([]model.GetTransactionResponse, len(data))
+	for i, v := range data {
+		result[i] = model.GetTransactionResponse{
+			ID:            v.ID,
+			CustomerID:    v.CustomerID,
+			Status:        string(v.Status),
+			TotalAmount:   v.TotalAmount,
+			CreatedAt:     v.CreatedAt,
+			PaymentMethod: v.PaymentMethod.Name,
+			UpdatedAt:     v.UpdatedAt,
+		}
+
+		for _, detail := range v.TransactionDetails {
+			result[i].Details = append(result[i].Details, model.GetTransactionDetailResponse{
+				ID:           detail.ID,
+				TrasactionID: detail.TransactionID,
+				ProductID:    detail.ProductID,
+				ProductName:  detail.Product.Name,
+				ProductPrice: detail.Product.Price,
+			})
+		}
+	}
+
+	return
+}

@@ -25,6 +25,7 @@ type Transaction struct {
 	CreatedAt          time.Time           `json:"created_at"`
 	UpdatedAt          time.Time           `json:"updated_at"`
 	TransactionDetails []TransactionDetail `json:"transaction_details"`
+	PaymentMethod      PaymentMethod       `json:"payment_method"`
 }
 
 func (Transaction) TableName() string {

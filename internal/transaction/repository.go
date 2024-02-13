@@ -17,4 +17,5 @@ type Repository interface {
 	CreateDetail(ctx context.Context, data []entity.TransactionDetail) (err error)
 	GetByID(ctx context.Context, id uuid.UUID) (result entity.Transaction, err error)
 	UpdateStatus(ctx context.Context, id uuid.UUID, status entity.TransactionStatus) (err error)
+	GetByCustomerID(ctx context.Context, customerID string) (result []entity.Transaction, err error)
 }
