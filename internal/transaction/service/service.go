@@ -81,7 +81,7 @@ func (s Service) Checkout(ctx context.Context, req model.CreateTransactionReques
 		data.TotalAmount = data.TotalAmount.Add(product.ProductPrice)
 		dataBatchUpdateStok[i] = model.UpdateStokRequest{
 			ID:   product.ProductID,
-			Stok: product.ProductStok - 1,
+			Stok: product.ProductStok - product.Qty,
 		}
 
 		if dataBatchUpdateStok[i].Stok < 0 {
