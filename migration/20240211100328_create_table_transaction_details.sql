@@ -7,7 +7,7 @@ CREATE TABLE
         product_id UUID,
         created_at TIMESTAMP DEFAULT now (),
         updated_at TIMESTAMP DEFAULT now (),
-        CONSTRAINT fk_transaction_details_transactions FOREIGN KEY (transaction_id) REFERENCES transactions (id),
+        CONSTRAINT fk_transaction_details_transactions FOREIGN KEY (transaction_id) REFERENCES transactions (id) ON DELETE CASCADE,
         CONSTRAINT fk_transaction_details_products FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
     );
 

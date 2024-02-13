@@ -649,6 +649,74 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/transactions/checkout": {
+            "post": {
+                "description": "Checkout based on products in cart",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Checkout",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "With the bearer started",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload Create Transaction Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arfan21_synapsis_id_internal_model.CreateTransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error validation field",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.ErrValidationResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -663,6 +731,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "product_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_arfan21_synapsis_id_internal_model.CreateTransactionRequest": {
+            "type": "object",
+            "required": [
+                "customer_id",
+                "payment_method_id"
+            ],
+            "properties": {
+                "customer_id": {
+                    "type": "string"
+                },
+                "payment_method_id": {
                     "type": "string"
                 }
             }

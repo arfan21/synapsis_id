@@ -14,6 +14,9 @@ import (
 	productctrl "github.com/arfan21/synapsis_id/internal/product/controller"
 	productrepo "github.com/arfan21/synapsis_id/internal/product/repository"
 	productsvc "github.com/arfan21/synapsis_id/internal/product/service"
+	transactionctrl "github.com/arfan21/synapsis_id/internal/transaction/controller"
+	transactionrepo "github.com/arfan21/synapsis_id/internal/transaction/repository"
+	transactionsvc "github.com/arfan21/synapsis_id/internal/transaction/service"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -39,10 +42,15 @@ func (s *Server) Routes() {
 	paymentSvc := paymentsvc.New(paymentRepo)
 	paymentCtrl := paymentctrl.New(paymentSvc)
 
+	transactionRepo := transactionrepo.New(s.db)
+	transactionSvc := transactionsvc.New(transactionRepo, cartSvc, paymentSvc, productSvc)
+	transactionCtrl := transactionctrl.New(transactionSvc)
+
 	s.RoutesCustomer(api, customerCtrl)
 	s.RoutesProduct(api, productCtrl)
 	s.RoutesCart(api, cartCtrl)
 	s.RoutesPayment(api, paymentCtrl)
+	s.RoutesTransaction(api, transactionCtrl)
 }
 
 func (s Server) RoutesCustomer(route fiber.Router, ctrl *customerctrl.ControllerHTTP) {
@@ -73,4 +81,10 @@ func (s Server) RoutesPayment(route fiber.Router, ctrl *paymentctrl.ControllerHT
 	v1 := route.Group("/v1")
 	paymentsV1 := v1.Group("/payments")
 	paymentsV1.Get("/methods", ctrl.GetPaymentMethods)
+}
+
+func (s Server) RoutesTransaction(route fiber.Router, ctrl *transactionctrl.ControllerHTTP) {
+	v1 := route.Group("/v1")
+	transactionsV1 := v1.Group("/transactions")
+	transactionsV1.Post("/checkout", middleware.JWTAuth, ctrl.Checkout)
 }
