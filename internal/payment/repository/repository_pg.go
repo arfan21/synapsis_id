@@ -9,6 +9,7 @@ import (
 	"github.com/arfan21/synapsis_id/pkg/constant"
 	dbpostgres "github.com/arfan21/synapsis_id/pkg/db/postgres"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -73,4 +74,25 @@ func (r Repository) GetPaymentMethodByID(ctx context.Context, id string) (result
 	}
 
 	return result, nil
+}
+
+func (r Repository) CreatePayment(ctx context.Context, payment entity.Payment) (err error) {
+	query := `
+		INSERT INTO payments (transaction_id)
+		VALUES ($1)
+	`
+
+	_, err = r.db.Exec(ctx, query, payment.TransactionID)
+	if err != nil {
+		var pgxError *pgconn.PgError
+		if errors.As(err, &pgxError) {
+			if pgxError.Code == constant.ErrSQLUniqueViolation {
+				err = constant.ErrTransactionAlreadyPaid
+			}
+		}
+		err = fmt.Errorf("payment.repository.CreatePayment: failed to create payment: %w", err)
+		return err
+	}
+
+	return nil
 }

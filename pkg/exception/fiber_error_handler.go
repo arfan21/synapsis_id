@@ -146,6 +146,22 @@ func FiberErrorHandler(ctx *fiber.Ctx, err error) error {
 		defaultRes.Message = constant.ErrProductNotFoundOrStok.Error()
 	}
 
+	if errors.Is(err, constant.ErrTransactionAlreadyPaid) {
+		defaultRes.Code = fiber.StatusBadRequest
+		defaultRes.Message = constant.ErrTransactionAlreadyPaid.Error()
+	}
+
+	if errors.Is(err, constant.ErrTransactionAlreadyPaidOrFailed) {
+		defaultRes.Code = fiber.StatusBadRequest
+		defaultRes.Message = constant.ErrTransactionAlreadyPaidOrFailed.Error()
+	}
+
+	if errors.Is(err, constant.ErrPaymentNotEqualTotalAmount) {
+		defaultRes.Code = fiber.StatusBadRequest
+		defaultRes.Message = constant.ErrPaymentNotEqualTotalAmount.Error()
+
+	}
+
 	if defaultRes.Code >= 500 {
 		defaultRes.Message = http.StatusText(defaultRes.Code)
 	}
