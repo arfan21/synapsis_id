@@ -1,8 +1,53 @@
 version: '3'
+
 services:
-  synapsis_id:
+  synapsis_id_api:
     build: .
     ports:
       - "8080:8080"
-    env_file:
-      - .env
+    environment:
+      - HTTP_PORT=8080
+      - ENV=dev
+      - DB_HOST=postgres_synapsis_id
+      - DB_PORT=5432
+      - DB_USERNAME=user
+      - DB_PASSWORD=user
+      - DB_NAME=postgres
+      - DB_SSL_MODE=
+      - REDIS_HOST=redis_synapsis_id
+      - REDIS_PORT=6379
+      - JWT_ACCESS_TOKEN_SECRET=qweqweqweqweqwe
+      - JWT_ACCESS_TOKEN_EXPIRE_IN=300
+      - JWT_REFRESH_TOKEN_SECRET=314aasdad
+      - JWT_REFRESH_TOKEN_EXPIRE_IN=500
+    networks:
+      - synapsis_id
+    restart: always
+
+  postgres_synapsis_id:
+    image: postgres:15.4-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+      POSTGRES_DB: postgres
+    networks:
+      - synapsis_id
+    volumes:
+      - synapsis_id:/var/lib/postgresql/data
+
+  redis_synapsis_id:
+    image: redis:7.2.4-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - synapsis_id
+
+volumes:
+  synapsis_id:
+
+
+networks:
+  synapsis_id:
+    driver: bridge
