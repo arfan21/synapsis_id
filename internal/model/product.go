@@ -36,3 +36,8 @@ type GetProductResponse struct {
 	OwnerID      uuid.UUID       `json:"owner_id" swaggertype:"string"`
 	OwnerName    string          `json:"owner_name"`
 }
+
+type UpdateStokRequest struct {
+	ID   uuid.UUID `json:"id"`
+	Stok int       `json:"stok"`
+}
