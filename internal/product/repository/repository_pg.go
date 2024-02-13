@@ -285,7 +285,7 @@ func (r Repository) GetProductByID(ctx context.Context, id string) (result entit
 func (r Repository) BatchUpdateStok(ctx context.Context, data []entity.Product) (err error) {
 	query := `
 		UPDATE products
-		SET stok = $1
+		SET stok = $1, updated_at = NOW()
 		WHERE id = $2 AND stok >= (stok - $1)
 	`
 

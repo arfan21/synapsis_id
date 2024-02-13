@@ -106,7 +106,7 @@ func (r Repository) GetByID(ctx context.Context, id uuid.UUID) (result entity.Tr
 func (r Repository) UpdateStatus(ctx context.Context, id uuid.UUID, status entity.TransactionStatus) (err error) {
 	query := `
 		UPDATE transactions
-		SET status = $1
+		SET status = $1, updated_at = NOW()
 		WHERE id = $2
 	`
 
