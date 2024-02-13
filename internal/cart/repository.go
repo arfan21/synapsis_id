@@ -15,4 +15,5 @@ type Repository interface {
 	Create(ctx context.Context, cart entity.Cart) (err error)
 	GetByCustomerID(ctx context.Context, customerID string) (data []entity.Cart, err error)
 	Delete(ctx context.Context, customerID, productID string) (err error)
+	DeleteAll(ctx context.Context, customerID string) (err error)
 }

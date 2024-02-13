@@ -10,6 +10,7 @@ import (
 	"github.com/arfan21/synapsis_id/internal/product"
 	"github.com/arfan21/synapsis_id/pkg/constant"
 	"github.com/arfan21/synapsis_id/pkg/validation"
+	"github.com/jackc/pgx/v5"
 )
 
 type Service struct {
@@ -19,6 +20,11 @@ type Service struct {
 
 func New(repo cart.Repository, productSvc product.Service) *Service {
 	return &Service{repo: repo, productSvc: productSvc}
+}
+
+func (s Service) WithTx(tx pgx.Tx) cart.Service {
+	s.repo = s.repo.WithTx(tx)
+	return &s
 }
 
 func (s Service) Create(ctx context.Context, req model.CreateCartRequest) (err error) {
@@ -88,4 +94,9 @@ func (s Service) Delete(ctx context.Context, customerID, productID string) (err 
 	}
 
 	return
+}
+
+func (s Service) DeleteAll(ctx context.Context, customerID string) (err error) {
+
+	return s.repo.DeleteAll(ctx, customerID)
 }

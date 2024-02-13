@@ -118,3 +118,18 @@ func (r Repository) Delete(ctx context.Context, customerID, productID string) (e
 
 	return
 }
+
+func (r Repository) DeleteAll(ctx context.Context, customerID string) (err error) {
+	query := `
+		DELETE FROM carts
+		WHERE customer_id = $1
+	`
+
+	_, err = r.db.Exec(ctx, query, customerID)
+	if err != nil {
+		err = fmt.Errorf("cart.repository.DeleteAll: failed to delete all cart: %w", err)
+		return
+	}
+
+	return
+}
