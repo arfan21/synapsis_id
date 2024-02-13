@@ -38,4 +38,5 @@ type GetTransactionDetailResponse struct {
 	ProductID    uuid.UUID       `json:"product_id" swaggertype:"string"`
 	ProductName  string          `json:"product_name"`
 	ProductPrice decimal.Decimal `json:"product_price" swaggertype:"string"`
+	Qty          int             `json:"qty"`
 }

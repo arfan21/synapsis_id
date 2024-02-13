@@ -39,6 +39,7 @@ type TransactionDetail struct {
 	CreatedAt     time.Time `json:"created_at"`
 	UpdatedAt     time.Time `json:"updated_at"`
 	Product       Product   `json:"product"`
+	Qty           int       `json:"qty"`
 }
 
 func (TransactionDetail) TableName() string {

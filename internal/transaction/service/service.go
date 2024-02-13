@@ -101,6 +101,7 @@ func (s Service) Checkout(ctx context.Context, req model.CreateTransactionReques
 		dataDetail[i] = entity.TransactionDetail{
 			TransactionID: id,
 			ProductID:     product.ProductID,
+			Qty:           product.Qty,
 		}
 	}
 
@@ -217,6 +218,7 @@ func (s Service) GetByCustomerID(ctx context.Context, customerID string) (result
 				ProductID:    detail.ProductID,
 				ProductName:  detail.Product.Name,
 				ProductPrice: detail.Product.Price,
+				Qty:          detail.Qty,
 			})
 		}
 	}

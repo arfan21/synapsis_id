@@ -54,11 +54,11 @@ func (r Repository) Create(ctx context.Context, data entity.Transaction) (id uui
 }
 
 func (r Repository) CreateDetail(ctx context.Context, data []entity.TransactionDetail) (err error) {
-	columns := []string{"transaction_id", "product_id"}
+	columns := []string{"transaction_id", "product_id", "qty"}
 
 	rows := make([][]interface{}, len(data))
 	for i, item := range data {
-		rows[i] = []interface{}{item.TransactionID, item.ProductID}
+		rows[i] = []interface{}{item.TransactionID, item.ProductID, item.Qty}
 	}
 
 	rowsAffected, err := r.db.CopyFrom(ctx,
@@ -133,6 +133,7 @@ func (r Repository) GetByCustomerID(ctx context.Context, customerID string) (res
 			pm.name AS payment_method_name,
 			td.id AS detail_id,
 			td.transaction_id AS detail_transaction_id,
+			td.qty AS detail_qty,
 			p.id AS product_id,
 			p.name AS product_name,
 			p.price AS product_price
@@ -166,6 +167,7 @@ func (r Repository) GetByCustomerID(ctx context.Context, customerID string) (res
 			&tx.PaymentMethod.Name,
 			&detail.ID,
 			&detail.TransactionID,
+			&detail.Qty,
 			&detail.ProductID,
 			&detail.Product.Name,
 			&detail.Product.Price,
