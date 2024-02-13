@@ -36,3 +36,15 @@ func (s Service) GetPaymentMethods(ctx context.Context) (res []model.GetPayemntM
 
 	return
 }
+
+func (s Service) GetPaymentMethodByID(ctx context.Context, id string) (res model.GetPayemntMethodResponse, err error) {
+	result, err := s.repo.GetPaymentMethodByID(ctx, id)
+	if err != nil {
+		err = fmt.Errorf("payment.service.GetPaymentMethodByID: failed to get payment method by id: %w", err)
+		return
+	}
+
+	res.ID = result.ID
+	res.Name = result.Name
+	return
+}

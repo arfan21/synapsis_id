@@ -13,4 +13,5 @@ type Repository interface {
 	WithTx(tx pgx.Tx) *paymentrepo.Repository
 
 	GetPaymentMethods(ctx context.Context) (result []entity.PaymentMethod, err error)
+	GetPaymentMethodByID(ctx context.Context, id string) (result entity.PaymentMethod, err error)
 }

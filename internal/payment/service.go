@@ -8,4 +8,5 @@ import (
 
 type Service interface {
 	GetPaymentMethods(ctx context.Context) (res []model.GetPayemntMethodResponse, err error)
+	GetPaymentMethodByID(ctx context.Context, id string) (res model.GetPayemntMethodResponse, err error)
 }

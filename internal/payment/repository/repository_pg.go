@@ -2,9 +2,11 @@ package paymentrepo
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/arfan21/synapsis_id/internal/entity"
+	"github.com/arfan21/synapsis_id/pkg/constant"
 	dbpostgres "github.com/arfan21/synapsis_id/pkg/db/postgres"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -54,6 +56,20 @@ func (r Repository) GetPaymentMethods(ctx context.Context) (result []entity.Paym
 	if err = rows.Err(); err != nil {
 		err = fmt.Errorf("payment.repository.GetPaymentMethods: failed to iterate payment methods: %w", err)
 		return nil, err
+	}
+
+	return result, nil
+}
+
+func (r Repository) GetPaymentMethodByID(ctx context.Context, id string) (result entity.PaymentMethod, err error) {
+	query := "SELECT id, name FROM payment_methods WHERE id = $1"
+	err = r.db.QueryRow(ctx, query, id).Scan(&result.ID, &result.Name)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			err = constant.ErrPaymentMethodNotFound
+		}
+		err = fmt.Errorf("payment.repository.GetPaymentMethodByID: failed to get payment method by id: %w", err)
+		return result, err
 	}
 
 	return result, nil
