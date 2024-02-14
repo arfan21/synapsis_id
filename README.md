@@ -6,8 +6,8 @@
 
 ### API Specification
 
--   Swagger Docs: /docs/swagger.json
--   Postman Collection:
+-   Swagger Docs: [Link](https://synapsis-id.fly.dev/swagger/index.html)
+-   Postman Docs: [Link](https://documenter.getpostman.com/view/10131591/2sA2r545j6)
 
 ### Prerequisites
 
