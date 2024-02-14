@@ -281,6 +281,74 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/customers/logout": {
+            "post": {
+                "description": "Logout Customer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customer"
+                ],
+                "summary": "Logout Customer",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "With the bearer started",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload Customer Logout Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arfan21_synapsis_id_internal_model.CustomerLogoutRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Error validation field",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.ErrValidationResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_arfan21_synapsis_id_pkg_pkgutil.HTTPResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/customers/refresh-token": {
             "post": {
                 "description": "Refresh Token Customer",
@@ -915,6 +983,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "token_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "github_com_arfan21_synapsis_id_internal_model.CustomerLogoutRequest": {
+            "type": "object",
+            "required": [
+                "refresh_token"
+            ],
+            "properties": {
+                "refresh_token": {
                     "type": "string"
                 }
             }

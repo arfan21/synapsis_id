@@ -178,3 +178,19 @@ func (s Service) RefreshToken(ctx context.Context, req model.CustomerRefreshToke
 
 	return
 }
+
+func (s Service) Logout(ctx context.Context, req model.CustomerLogoutRequest) (err error) {
+	err = validation.Validate(req)
+	if err != nil {
+		err = fmt.Errorf("customer.service.Logout: failed to validate request: %w", err)
+		return
+	}
+
+	err = s.repoRedis.DeleteRefreshToken(ctx, req.RefreshToken)
+	if err != nil {
+		err = fmt.Errorf("customer.service.Logout: failed to delete refresh token: %w", err)
+		return
+	}
+
+	return
+}

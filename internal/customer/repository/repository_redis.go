@@ -54,3 +54,13 @@ func (r RepositoryRedis) IsRefreshTokenExist(ctx context.Context, token string) 
 
 	return
 }
+
+func (r RepositoryRedis) DeleteRefreshToken(ctx context.Context, token string) (err error) {
+	err = r.client.Del(ctx, token).Err()
+	if err != nil && !errors.Is(err, redis.Nil) {
+		err = fmt.Errorf("customer.repository_redis.DeleteRefreshToken: failed to delete refresh token: %w", err)
+		return
+	}
+
+	return
+}

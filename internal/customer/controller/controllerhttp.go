@@ -86,3 +86,27 @@ func (ctrl ControllerHTTP) RefreshToken(c *fiber.Ctx) error {
 		Data: res,
 	})
 }
+
+// @Summary Logout Customer
+// @Description Logout Customer
+// @Tags Customer
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "With the bearer started"
+// @Param body body model.CustomerLogoutRequest true "Payload Customer Logout Request"
+// @Success 200 {object} pkgutil.HTTPResponse
+// @Failure 400 {object} pkgutil.HTTPResponse{errors=[]pkgutil.ErrValidationResponse} "Error validation field"
+// @Failure 500 {object} pkgutil.HTTPResponse
+// @Router /api/v1/customers/logout [post]
+func (ctrl ControllerHTTP) Logout(c *fiber.Ctx) error {
+	var req model.CustomerLogoutRequest
+	err := c.BodyParser(&req)
+	exception.PanicIfNeeded(err)
+
+	err = ctrl.svc.Logout(c.UserContext(), req)
+	exception.PanicIfNeeded(err)
+
+	return c.Status(fiber.StatusOK).JSON(pkgutil.HTTPResponse{
+		Code: fiber.StatusOK,
+	})
+}

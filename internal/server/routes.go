@@ -59,6 +59,7 @@ func (s Server) RoutesCustomer(route fiber.Router, ctrl *customerctrl.Controller
 	customersV1.Post("/register", ctrl.Register)
 	customersV1.Post("/login", ctrl.Login)
 	customersV1.Post("/refresh-token", ctrl.RefreshToken)
+	customersV1.Post("/logout", middleware.JWTAuth, ctrl.Logout)
 }
 
 func (s Server) RoutesProduct(route fiber.Router, ctrl *productctrl.ControllerHTTP) {
