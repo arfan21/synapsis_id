@@ -30,7 +30,8 @@ jobs:
                   context: .
                   file: ./Dockerfile
                   push: true
-                  tags: latest
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
     deploy_to_fly:
         name: Deploy app
         runs-on: ubuntu-latest
