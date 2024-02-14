@@ -31,7 +31,7 @@ go install github.com/cosmtrek/air@latest
 ## Build <a name="build"></a>
 
 ```
-go build -o server ./main.go
+go build -o server ./cmd/main.go
 ```
 
 ## Usage <a name="usage"></a>
