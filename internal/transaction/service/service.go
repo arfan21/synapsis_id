@@ -12,6 +12,7 @@ import (
 	"github.com/arfan21/synapsis_id/internal/transaction"
 	"github.com/arfan21/synapsis_id/pkg/constant"
 	"github.com/arfan21/synapsis_id/pkg/validation"
+	"github.com/shopspring/decimal"
 )
 
 type Service struct {
@@ -78,11 +79,12 @@ func (s Service) Checkout(ctx context.Context, req model.CreateTransactionReques
 
 	// calculate total amount
 	for i, product := range products {
-		data.TotalAmount = data.TotalAmount.Add(product.ProductPrice)
 		dataBatchUpdateStok[i] = model.UpdateStokRequest{
 			ID:   product.ProductID,
 			Stok: product.ProductStok - product.Qty,
 		}
+
+		data.TotalAmount = data.TotalAmount.Add(product.ProductPrice.Mul(decimal.NewFromInt(int64(product.Qty))))
 
 		if dataBatchUpdateStok[i].Stok < 0 {
 			err = fmt.Errorf("transaction.service.Checkout: product stok is not enough : %w", constant.ErrProductStokNotEnough)
