@@ -37,7 +37,7 @@ type GetProductResponse struct {
 	OwnerName    string          `json:"owner_name"`
 }
 
-type UpdateStokRequest struct {
-	ID   uuid.UUID `json:"id"`
-	Stok int       `json:"stok"`
+type ReducetokRequest struct {
+	ID       uuid.UUID `json:"id"`
+	ReduceBy int       `json:"reduce_by"`
 }

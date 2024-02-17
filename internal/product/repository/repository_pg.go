@@ -11,6 +11,7 @@ import (
 	"github.com/arfan21/synapsis_id/internal/model"
 	"github.com/arfan21/synapsis_id/pkg/constant"
 	dbpostgres "github.com/arfan21/synapsis_id/pkg/db/postgres"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -282,14 +283,14 @@ func (r Repository) GetProductByID(ctx context.Context, id string) (result entit
 	return
 }
 
-func (r Repository) UpdateStok(ctx context.Context, data entity.Product) (err error) {
+func (r Repository) ReduceStok(ctx context.Context, id uuid.UUID, reduceBy int) (err error) {
 	query := `
 		UPDATE products
-		SET stok = $1, updated_at = NOW()
-		WHERE id = $2 AND stok >= (stok - $1)
+		SET stok = stok -  $1, updated_at = NOW()
+		WHERE id = $2 AND stok - $1 >= 0
 	`
 
-	cmd, err := r.db.Exec(ctx, query, data.Stok, data.ID)
+	cmd, err := r.db.Exec(ctx, query, reduceBy, id)
 	if err != nil {
 		err = fmt.Errorf("product.repository.BatchUpdateStok: failed to batch deduct stok: %w", err)
 		return err

@@ -75,18 +75,18 @@ func (s Service) Checkout(ctx context.Context, req model.CreateTransactionReques
 		PaymentMethodID: req.PaymentMethodID,
 	}
 
-	dataBatchUpdateStok := make([]model.UpdateStokRequest, len(products))
+	dataBatchUpdateStok := make([]model.ReducetokRequest, len(products))
 
 	// calculate total amount
 	for i, product := range products {
-		dataBatchUpdateStok[i] = model.UpdateStokRequest{
-			ID:   product.ProductID,
-			Stok: product.ProductStok - product.Qty,
+		dataBatchUpdateStok[i] = model.ReducetokRequest{
+			ID:       product.ProductID,
+			ReduceBy: product.Qty,
 		}
 
 		data.TotalAmount = data.TotalAmount.Add(product.ProductPrice.Mul(decimal.NewFromInt(int64(product.Qty))))
 
-		if dataBatchUpdateStok[i].Stok < 0 {
+		if product.ProductStok < product.Qty {
 			err = fmt.Errorf("transaction.service.Checkout: product stok is not enough : %w", constant.ErrProductStokNotEnough)
 			return res, err
 		}
@@ -113,7 +113,7 @@ func (s Service) Checkout(ctx context.Context, req model.CreateTransactionReques
 		return
 	}
 
-	err = s.productSvc.WithTx(tx).BatchUpdateStok(ctx, dataBatchUpdateStok)
+	err = s.productSvc.WithTx(tx).BatchReduceStok(ctx, dataBatchUpdateStok)
 	if err != nil {
 		err = fmt.Errorf("transaction.service.Checkout: failed to update product stok : %w", err)
 		return

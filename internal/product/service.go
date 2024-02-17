@@ -20,5 +20,5 @@ type Service interface {
 
 	IsProductExist(ctx context.Context, id string) (exist bool, err error)
 	GetProductByID(ctx context.Context, id string) (res model.GetProductResponse, err error)
-	BatchUpdateStok(ctx context.Context, req []model.UpdateStokRequest) (err error)
+	BatchReduceStok(ctx context.Context, req []model.ReducetokRequest) (err error)
 }

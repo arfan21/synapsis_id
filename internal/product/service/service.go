@@ -161,7 +161,7 @@ func (s Service) GetProductByID(ctx context.Context, id string) (res model.GetPr
 	return
 }
 
-func (s Service) BatchUpdateStok(ctx context.Context, req []model.UpdateStokRequest) (err error) {
+func (s Service) BatchReduceStok(ctx context.Context, req []model.ReducetokRequest) (err error) {
 	tx, err := s.repo.Begin(ctx)
 	if err != nil {
 		err = fmt.Errorf("product.service.BatchUpdateStok: failed to begin transaction : %w", err)
@@ -182,10 +182,7 @@ func (s Service) BatchUpdateStok(ctx context.Context, req []model.UpdateStokRequ
 	}()
 
 	for _, v := range req {
-		err = s.repo.UpdateStok(ctx, entity.Product{
-			ID:   v.ID,
-			Stok: v.Stok,
-		})
+		err = s.repo.ReduceStok(ctx, v.ID, v.ReduceBy)
 		if err != nil {
 			err = fmt.Errorf("product.service.BatchUpdateStok: failed to update batch stok : %w", err)
 			return err
