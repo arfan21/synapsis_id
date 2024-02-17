@@ -2,7 +2,8 @@
 
 ### Database Schema
 
-![Database Schema](https://github.com/arfan21/synapsis_id/assets/48755707/e51accc5-79aa-4f7b-9a2a-66999d18b7d8)
+![Database Schema](https://github.com/arfan21/synapsis_id/assets/48755707/f5a0263f-7de5-492b-801b-85edd885d1d9)
+
 
 ### API Specification
 
